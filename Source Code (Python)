@@ -1,0 +1,29 @@
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score
+
+# Downloading the 20 Newsgroups dataset
+data = fetch_20newsgroups(subset='all', shuffle=True, remove=('headers', 'footers', 'quotes'))
+
+# Splitting the dataset into training and testing sets
+X_train = data.data[:15000]
+y_train = data.target[:15000]
+X_test = data.data[15000:]
+y_test = data.target[15000:]
+
+# Vectorizing the text data
+vectorizer = TfidfVectorizer()
+X_train_vectorized = vectorizer.fit_transform(X_train)
+X_test_vectorized = vectorizer.transform(X_test)
+
+# Creating and training the classifier
+classifier = MultinomialNB()
+classifier.fit(X_train_vectorized, y_train)
+
+# Making predictions on the test set
+y_pred = classifier.predict(X_test_vectorized)
+
+# Calculating the accuracy of the classifier
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
